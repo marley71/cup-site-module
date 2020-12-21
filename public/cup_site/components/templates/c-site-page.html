@@ -1,0 +1,50 @@
+<template  id="c-site-page-template">
+    <div>
+        <div class="clearfix">
+            <div><h5 >Gestione pagina</h5></div>
+            <div class="clearfix">
+                <a class="pull-left" :href="'/cup_site/' + pageData.menu_it" target="_blank">Anteprima</a>
+                <div class="pull-right">
+                    <label>Tipo pagina</label>
+                    <w-select :c-conf="tipoPagina"></w-select>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div v-if="type=='html'">
+            <v-edit :c-comp-ref="paginaRef" c-model="cup_site_page" :c-pk="pk"></v-edit>
+        </div>
+        <template v-if="type=='news'">
+            <c-manage :c-comp-ref="newsManageRef" c-conf="ManageCupSiteNews"></c-manage>
+        </template>
+        <template v-if="type=='eventi'">
+            <v-calendar :c-comp-ref="eventiRef" c-model="cup_site_news"></v-calendar>
+        </template>
+        <div v-if="type=='home'">
+            <v-edit :c-comp-ref="paginaRef" c-conf="ModelCupSitePage.home" :c-pk="pk"></v-edit>
+        </div>
+<!--        <div v-if="type=='html'"></div>-->
+<!--        <div v-if="type=='html'"></div>-->
+    </div>
+<!--    <c-loading v-if="loading" :error-msg="errorMsg"></c-loading>-->
+<!--    <div v-else>-->
+<!--        <div v-html="beforeForm"></div>-->
+<!--        <form enctype="multipart/form-data">-->
+<!--            &lt;!&ndash; campi nascosti &ndash;&gt;-->
+<!--            <template v-for="(widget, key) in widgets" v-if="isHiddenField(key)">-->
+<!--                <v-widget :c-widget="widget" :key="key"></v-widget>-->
+<!--            </template>-->
+<!--            <div class="row">-->
+<!--                <v-widget v-for="(widget, key) in widgets" :c-widget="widget" v-if="!isHiddenField(key)"></v-widget>-->
+<!--            </div>-->
+<!--        </form>-->
+<!--        <div v-html="beforeActions"></div>-->
+<!--        <div class="p-3" v-show="actions.length">-->
+<!--            <template v-for="(action,name) in actionsConf">-->
+<!--                <v-action :c-action="action"></v-action>-->
+<!--            </template>-->
+<!--        </div>-->
+<!--    </div>-->
+</template>

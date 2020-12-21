@@ -1,0 +1,13 @@
+{
+    "name": "CupSite",
+    "alias": "cupsite",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "Modules\\CupSite\\Providers\\CupSiteServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

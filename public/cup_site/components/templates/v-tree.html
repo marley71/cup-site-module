@@ -1,0 +1,19 @@
+<template id="v-tree-template">
+    <div v-if="!loading" id="jstree" >
+        <ul>
+            <li id="root">
+                Pagine sito
+                <ul>
+                    <li :id="row.id" v-for="(row,index) in value">
+                        {{row.menu_it}}
+                        <ul v-if="row.children.length > 0">
+                            <li :id="subitem.id" v-for="(subitem,idx) in row.children">
+                                {{subitem.menu_it}}
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</template>

@@ -1,0 +1,60 @@
+{
+  "foorm": {
+        "entities": [
+            "cup_site_page",
+            "cup_site_news",
+            "cup_site_setting"
+        ]
+  },
+  "modelconfs": {
+    "files": [
+        "CupSitePage.js",
+        "CupSiteSetting.js",
+        "CupSiteNews.js"
+    ]
+  },
+  "permissions": {
+    "models": [
+        "cup_site_page",
+        "cup_site_setting"
+    ],
+    "other_permissions": {
+      "web": [
+      ]
+    }
+  },
+  "policies": {
+    "models": {
+        "\\App\\Models\\CupSitePage": "\\App\\Policies\\CupSitePagePolicy",
+        "\\App\\Models\\CupSitePage": "\\App\\Policies\\CupSiteNewsPolicy",
+        "\\App\\Models\\CupSiteSetting": "\\App\\Policies\\CupSiteSettingPolicy"
+    }
+  },
+  "models": [
+      "CupSitePage",
+      "CupSiteSetting",
+      "CupSiteFoto",
+      "CupSiteAttachment",
+      "CupSiteVideo",
+      "CupSiteNews"
+  ],
+  "datafile-models": [
+  ],
+  "datafile-providers": [
+  ],
+  "pages": [
+      "CupSiteManager.html"
+  ],
+  "config": [
+      "cupparis-site"
+  ],
+  "database": {
+    "seeds": [
+        "CupSitePageSeeder",
+        "CupSiteSettingSeeder",
+        "CupSiteSeeder"
+    ],
+    "dump": [
+    ]
+  }
+}

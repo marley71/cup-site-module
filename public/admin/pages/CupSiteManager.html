@@ -1,0 +1,50 @@
+<div class="clearfix">
+    <div class="flex">
+        <div id="tree-container"></div>
+    </div>
+    <div class="flex" id="areaEdit">
+
+    </div>
+</div>
+<script>
+    var pageManager = {
+        cRef : 'vvv',
+        modelName:'cup_site_page',
+        fields : ['titolo_it'],
+        currentPage : null,
+        settings : null,
+        pagesType : {},
+        newNodes : [],
+    }
+    settingsEdit = ModelCupSiteSetting.edit;
+    settingsEdit.pk = 1;
+    function __initManger() {
+        console.log(app.$refs['menu'].loading)
+        if (app.$refs['menu'].loading) {
+            setTimeout(__initManger,200);
+            return ;
+        }
+
+        app.loadResources([
+            '/cup_site/components/templates/v-tree.html',
+            '/cup_site/components/templates/c-site-page.html',
+            '/cup_site/components/templates/v-calendar.html',
+            '/cup_site/components/templates/w-video.html',
+            '/cup_site/components/js/v-tree.js',
+            '/cup_site/components/js/c-site-page.js',
+            '/cup_site/components/js/v-calendar.js',
+            '/cup_site/components/js/w-video.js',
+        ],function () {
+            var comp = new app.$options.components['v-tree']({
+                propsData : {
+                    cConf : 'pageManager'
+                },
+            });
+            comp.$mount('#tree-container')
+        })
+
+    }
+
+    __initManger();
+
+</script>
