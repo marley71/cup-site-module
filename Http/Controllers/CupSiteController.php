@@ -2,6 +2,7 @@
 
 namespace Modules\CupSite\Http\Controllers;
 
+use Igaster\LaravelTheme\Facades\Theme;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -9,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CupSiteNews;
 use Gecche\Foorm\Facades\Foorm;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Modules\CupSite\Models\CupSitePage;
 use Modules\CupSite\Models\CupSiteSetting;
 
@@ -26,11 +28,12 @@ class CupSiteController extends Controller
     public function __construct()
     {
         //$this->middleware('auth');
+        Theme::set('cup_site');
         $setting = CupSiteSetting::where('default',1)->first();
-        self::$layout = $setting->layout; // config('cupparis-site.layout');
         if (!$setting) {
             $setting = CupSiteSetting::first();
         }
+        self::$layout = $setting->layout; // config('cup-site.layout');
         $this->setting = $setting?$setting->toArray():[];
         $this->menu = $this->_menu();
     }
@@ -43,6 +46,34 @@ class CupSiteController extends Controller
         return view('cupsite::index');
     }
 
+    public function subPage($menu,$submenu) {
+        $mainPage = CupSitePage::where('menu_it',$menu)->first();
+        if (!$mainPage)
+            abort('404','main page not found');
+        if ($submenu) {
+            $page = CupSitePage::where('menu_it',$submenu)->where('cup_site_page_id',$mainPage->getKey())->first();
+            if (!$page)
+                abort(404,'sub page not found');
+        }
+
+        $children = CupSitePage::where('cup_site_page_id',$mainPage->getKey())->get();
+        $children = $children?$children->toArray():[];
+
+        $page['children'] = $children;
+        $pageType = Arr::get($page,'type',Arr::get($mainPage,'type'));
+        switch ($pageType) {
+            case 'html':
+                //print_r($this->menu);
+                return view('cup_site.' . self::$layout . '.pages.html', [
+                    'page' => $page,
+                    'mainPage' => $mainPage,
+                    'layout' => self::$layout,
+                    'setting' => $this->setting,
+                    'menu' => $this->menu,
+                    'route_prefix' => config('cup-site.route_prefix'),
+                ]);
+        }
+    }
     /**
      * Show the application dashboard.
      *
@@ -78,7 +109,7 @@ class CupSiteController extends Controller
                     'layout' => self::$layout,
                     'setting' => $this->setting,
                     'menu' => $this->menu,
-                    'route_prefix' => config('cupparis-site.route_prefix'),
+                    'route_prefix' => config('cup-site.route_prefix'),
                 ]);
             case 'news':
             case 'eventi':
@@ -109,7 +140,7 @@ class CupSiteController extends Controller
                     'mainPage' => null,
                     'setting' => $this->setting,
                     'menu' => $this->menu,
-                    'route_prefix' => config('cupparis-site.route_prefix'),
+                    'route_prefix' => config('cup-site.route_prefix'),
                 ]);
 
 //                $newsForm = Foorm::getFoorm('cup_site_news.weblist',request());
@@ -119,10 +150,12 @@ class CupSiteController extends Controller
 //                    'layout' => self::$layout,
 //                    'setting' => $this->setting,
 //                    'menu' => $this->menu,
-//                    'route_prefix' => config('cupparis-site.route_prefix'),
+//                    'route_prefix' => config('cup-site.route_prefix'),
 //                ]);
             case 'home':
                 return $this->_home($page);
+            case 'blade':
+                return $this->_blade($menu);
         }
 
         abort(404);
@@ -151,7 +184,7 @@ class CupSiteController extends Controller
             'layout' => self::$layout,
             'setting' => $this->setting,
             'menu' => $this->menu,
-            'route_prefix' => config('cupparis-site.route_prefix'),
+            'route_prefix' => config('cup-site.route_prefix'),
         ]);
     }
 
@@ -178,18 +211,35 @@ class CupSiteController extends Controller
             'layout' => self::$layout,
             'setting' => $this->setting,
             'menu' => $this->menu,
-            'route_prefix' => config('cupparis-site.route_prefix'),
+            'route_prefix' => config('cup-site.route_prefix'),
         ]);
     }
 
-    protected function _home($page) {
-        return view('cup_site.' . self::$layout .'.pages.home', [
+    protected function _blade($page) {
+        $data = [
             'setting' => $this->setting,
             'page' => $page,
             'menu' => $this->menu,
             'mainPage' => null,
-            'route_prefix' => config('cupparis-site.route_prefix'),
-        ]);
+            'route_prefix' => config('cup-site.route_prefix'),
+        ];
+        $methodPage = '_' .  Str::camel($page) . 'Data';
+        $pageData = method_exists($this,$methodPage)?$this->$methodPage():[];
+        $data = array_merge($data,$pageData);
+        return view('cup_site.' . self::$layout .'.pages.'.$page,$data );
+    }
+    protected function _home($page) {
+        return $this->_blade('home');
+//        $data = [
+//            'setting' => $this->setting,
+//            'page' => $page,
+//            'menu' => $this->menu,
+//            'mainPage' => null,
+//            'route_prefix' => config('cup-site.route_prefix'),
+//        ];
+//        $homeData = method_exists($this,'_homeData')?$this->_homeData():[];
+//        $data = array_merge($data,$homeData);
+//        return view('cup_site.' . self::$layout .'.pages.home',$data );
     }
     public function admin()
     {

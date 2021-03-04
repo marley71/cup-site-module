@@ -56,7 +56,8 @@ class CupSitePage extends Breeze
 
 
     public static function getPageTree() {
-        $pages = self::whereNull('cup_site_page_id')->get()->toArray();
+        $pages = self::whereNull('cup_site_page_id')->where('attivo',1)
+            ->orderBy('ordine')->get()->toArray();
         for($i=0;$i<count($pages);$i++) {
             $subPages = self::where('cup_site_page_id',$pages[$i]['id'])->get()->toArray();
             $pages[$i]['children'] = $subPages;
