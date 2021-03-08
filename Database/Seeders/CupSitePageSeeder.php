@@ -23,7 +23,7 @@ class CupSitePageSeeder extends Seeder
            'titolo_it' => 'home',
             'menu_it' => 'home',
            'type' => 'home',
-           'fix' => 1,
+//           'fix' => 1,
            'content_it' => 'contenuto1'
         ]);
 

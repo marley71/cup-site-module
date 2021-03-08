@@ -54,12 +54,23 @@ class CupSitePage extends Breeze
     public $fieldsSeparator = ' - ';
 
 
+    /**
+     * restituisce le pagine in formato albero, in caso isAdmin e' settato a true restituisce
+     * anche le pagine non attive.
+     * @param false $isAdmin
+     * @return mixed
+     */
+    public static function getPageTree($isAdmin=false) {
+        $pages = self::whereNull('cup_site_page_id');
+        if ($isAdmin)
+            $pages->where('attivo',1);
 
-    public static function getPageTree() {
-        $pages = self::whereNull('cup_site_page_id')->where('attivo',1)
-            ->orderBy('ordine')->get()->toArray();
+        $pages = $pages->orderBy('ordine')->get()->toArray();
         for($i=0;$i<count($pages);$i++) {
-            $subPages = self::where('cup_site_page_id',$pages[$i]['id'])->get()->toArray();
+            $subPages = self::where('cup_site_page_id',$pages[$i]['id']);
+            if ($isAdmin)
+                $subPages->where('attivo',1);
+            $subPages = $subPages->get()->toArray();
             $pages[$i]['children'] = $subPages;
         }
         return $pages;
@@ -69,6 +80,9 @@ class CupSitePage extends Breeze
      * Overload model save.
      *
      * $name_equals string Assert User's name (Optional)
+     * durante il salvataggio faccio il controllo se ci sono delle immagini o attachments presenti nell'html
+     * generati dall'editor html. In caso li trovi, salvo l'ìmmagine come file esterno e viene inserito il suo
+     * link.
      */
     public function save(array $options = array())
     {
