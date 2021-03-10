@@ -88,6 +88,7 @@ class CupSiteController extends Controller
             $page = CupSitePage::where('menu_it',$menu)->first();
         if (!$page)
             abort(404);
+
         $page = $page->toArray();
         //$cup_site_page_id = Arr::get($page,'id',0);
         $mainPage = CupSitePage::find($page['cup_site_page_id']);
@@ -155,7 +156,7 @@ class CupSiteController extends Controller
             case 'home':
                 return $this->_home($page);
             case 'blade':
-                return $this->_blade($menu);
+                return $this->_blade($page['menu_it']);
         }
 
         abort(404);

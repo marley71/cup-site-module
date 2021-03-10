@@ -20,7 +20,7 @@ class CupSitePageSeeder extends Seeder
 
 
         CupSitePage::create([
-           'titolo_it' => 'home',
+           'titolo_it' => 'Home',
             'menu_it' => 'home',
            'type' => 'home',
 //           'fix' => 1,
