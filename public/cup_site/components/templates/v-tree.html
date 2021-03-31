@@ -2,7 +2,7 @@
     <div v-if="!loading" id="jstree" >
         <ul>
             <li id="root">
-                Pagine sito
+                <b>{{ titolo }}</b>
                 <ul>
                     <li :id="row.id" v-for="(row,index) in value">
                         {{row.menu_it}}

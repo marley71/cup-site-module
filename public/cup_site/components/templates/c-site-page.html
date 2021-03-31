@@ -1,12 +1,16 @@
 <template  id="c-site-page-template">
     <div>
         <div class="clearfix">
-            <div><h5 >Gestione pagina</h5></div>
-            <div class="clearfix">
-                <a class="pull-left" :href="'/cup_site/' + pageData.menu_it" target="_blank">Anteprima</a>
-                <div class="pull-right">
-                    <label>Tipo pagina</label>
-                    <w-select :c-conf="tipoPagina"></w-select>
+            <div class="row">
+                <div class="col-3 pb--3">
+                    <h5 >Gestione pagina</h5>
+                </div>
+                <div class="col-3  pb--3">
+                    <a :href="'/' + routeSite + '/' + pageData.menu_it" target="_blank">Anteprima</a>
+                </div>
+                <div class="col-6">
+                    <label class="w-50 float-left">Tipo pagina</label>
+                    <w-select class="w-50" :c-conf="tipoPagina"></w-select>
                 </div>
             </div>
 

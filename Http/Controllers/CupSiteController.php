@@ -50,29 +50,36 @@ class CupSiteController extends Controller
         $mainPage = CupSitePage::where('menu_it',$menu)->first();
         if (!$mainPage)
             abort('404','main page not found');
-        if ($submenu) {
-            $page = CupSitePage::where('menu_it',$submenu)->where('cup_site_page_id',$mainPage->getKey())->first();
-            if (!$page)
-                abort(404,'sub page not found');
+
+        switch ($mainPage->type) {
+            case 'news':
+                return $this->dettaglioNews($mainPage,$submenu);
+            default:
+                if ($submenu) {
+                    $page = CupSitePage::where('menu_it',$submenu)->where('cup_site_page_id',$mainPage->getKey())->first();
+                    if (!$page)
+                        abort(404,'sub page not found');
+                }
+
+                $children = CupSitePage::where('cup_site_page_id',$mainPage->getKey())->get();
+                $children = $children?$children->toArray():[];
+
+                $page['children'] = $children;
+                $pageType = Arr::get($page,'type',Arr::get($mainPage,'type'));
+                switch ($pageType) {
+                    case 'html':
+                        //print_r($this->menu);
+                        return view('cup_site.' . self::$layout . '.pages.html', [
+                            'page' => $page,
+                            'mainPage' => $mainPage,
+                            'layout' => self::$layout,
+                            'setting' => $this->setting,
+                            'menu' => $this->menu,
+                            'route_prefix' => config('cup-site.route_prefix'),
+                        ]);
+                }
         }
 
-        $children = CupSitePage::where('cup_site_page_id',$mainPage->getKey())->get();
-        $children = $children?$children->toArray():[];
-
-        $page['children'] = $children;
-        $pageType = Arr::get($page,'type',Arr::get($mainPage,'type'));
-        switch ($pageType) {
-            case 'html':
-                //print_r($this->menu);
-                return view('cup_site.' . self::$layout . '.pages.html', [
-                    'page' => $page,
-                    'mainPage' => $mainPage,
-                    'layout' => self::$layout,
-                    'setting' => $this->setting,
-                    'menu' => $this->menu,
-                    'route_prefix' => config('cup-site.route_prefix'),
-                ]);
-        }
     }
     /**
      * Show the application dashboard.
@@ -87,7 +94,7 @@ class CupSiteController extends Controller
         else
             $page = CupSitePage::where('menu_it',$menu)->first();
         if (!$page)
-            abort(404);
+            abort(404,'Pagina non trovata');
 
         $page = $page->toArray();
         //$cup_site_page_id = Arr::get($page,'id',0);
@@ -248,21 +255,31 @@ class CupSiteController extends Controller
         return view('cup_site.admin.index');
     }
 
-//    public function manage($model) {
-//        return view('manage',['model' => $model]);
-//    }
-//
-//    public function dashboard() {
-//        return view('dashboard');
-//    }
-//    public function inline() {
-//        return view('inline');
-//    }
-//
+
     protected function _menu() {
         return CupSitePage::getPageTree();
     }
 
+    protected function dettaglioNews($mainPage,$menu) {
+        $item = CupSiteNews::where('menu_it',$menu)->first();
+        if (!$item)
+            abort(404);
+
+        $newsForm = Foorm::getFoorm('cup_site_news.web',request(),['id' => $item['id']]);
+        $pageForm = Foorm::getFoorm('cup_site_page.web',request(),['id' => $item['cup_site_page_id']]);
+        $page = $pageForm->getFormData();
+        $news = $newsForm->getFormData();
+        $page['children'] = [];
+        return view('cup_site.' . self::$layout .'.pages.news_dettaglio',[
+            'page'=> $page,
+            'news'=> $news,
+            'mainPage' => null,
+            'layout' => self::$layout,
+            'setting' => $this->setting,
+            'menu' => $this->menu,
+            'route_prefix' => config('cup-site.route_prefix'),
+        ]);
+    }
     public static function block($type='news') {
         switch ($type) {
             case 'news':
@@ -280,63 +297,4 @@ class CupSiteController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Response
-     */
-    public function create()
-    {
-        return view('cupsite::create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        return view('cupsite::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        return view('cupsite::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

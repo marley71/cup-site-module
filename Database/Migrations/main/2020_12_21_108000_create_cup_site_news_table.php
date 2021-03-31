@@ -19,7 +19,7 @@ class CreateCupSiteNewsTable extends Migration
             $table->increments('id');
             $table->string('titolo_it');
             $table->string('menu_it');
-            $table->text('descrizione_it');
+            $table->longText('descrizione_it');
 //            $table->string('titolo_en');
 //            $table->text('descrizione_en');
 //            $table->string('titolo_es');

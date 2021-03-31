@@ -3,6 +3,7 @@ crud.conf['v-tree'] = {
         'https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css',
         'https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js',
     ],
+    titolo : 'Menu principale'
 }
 Vue.component('v-tree',{
     extends : crud.components.views.vList,

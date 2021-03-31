@@ -12,6 +12,7 @@ use PHPHtmlParser\Dom;
 class CupSiteNews extends Breeze
 {
 
+    use HtmlTraits;
 
 //    use ModelWithUploadsTrait;
 
@@ -58,6 +59,9 @@ class CupSiteNews extends Breeze
     public function save(array $options = array())
     {
         //echo($this->content_id);
+
+        $this->descrizione_it = $this->_saveHtmlEntities($this->descrizione_it);
+
         if (!$this->getKey()) {
             $this->menu_it = 'new' . rand();
             parent::save($options);

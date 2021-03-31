@@ -7,8 +7,9 @@ crud.conf['c-site-page'] = {
         domainValues : {
             'html' : 'html libero',
             'home' : 'home',
-            'news' : 'news',
-            'eventi' : 'eventi'
+            'news' : 'Contenitore di news',
+            'eventi' : 'Contenitore di eventi',
+            'blade' : 'statica'
         },
         defaultValue : 'html',
     },
@@ -16,6 +17,7 @@ crud.conf['c-site-page'] = {
     paginaRef : 'paginaRef',
     newsManageRef : 'newsManageRef',
     eventiRef : 'eventiRef',
+    routeSite : 'cup_site'
 }
 crud.components.cSitePage = Vue.component('c-site-page', {
     extends: crud.components.cComponent,
