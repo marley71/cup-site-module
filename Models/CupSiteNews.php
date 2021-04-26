@@ -4,6 +4,7 @@ namespace Modules\CupSite\Models;
 
 use App\Models\CupSiteFoto;
 use Gecche\Cupparis\App\Breeze\Breeze;
+use Illuminate\Support\Facades\Config;
 use PHPHtmlParser\Dom;
 
 /**
@@ -24,7 +25,7 @@ class CupSiteNews extends Breeze
     //public $ownerships = false;
 
     public $appends = [
-
+        'thumb_url'
     ];
 
 
@@ -69,5 +70,18 @@ class CupSiteNews extends Breeze
 
         $this->menu_it = $this->getKey() . "-" . str_replace(' ','-',$this->titolo_it);
         return parent::save($options);
+    }
+
+    public function getThumbUrlAttribute()
+    {
+        $dom = new Dom();
+        $dom->loadStr($this->descrizione_it);
+        foreach ($dom->find('img') as $image) {
+            $src = $image->getAttribute('src');
+            if (strpos($src,"data:") === FALSE) {
+                return $src;
+            }
+        }
+        return config('cup-site.default_thumb_url');// '/abruzzo/assets/images/logo-abruzzo.png';
     }
 }

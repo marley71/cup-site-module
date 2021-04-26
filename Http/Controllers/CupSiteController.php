@@ -121,45 +121,27 @@ class CupSiteController extends Controller
                 ]);
             case 'news':
             case 'eventi':
-//                $search_filters = [
-//                    'search_filters' =>  [
-//                        [
-//                            'field' => 's_cup_site_page_id',
-//                            'value' => "".$page['id'],
-//                        ]
-//                    ]
-//                ];
-                $request = request()->merge(['s_cup_site_page_id' => "".$page['id']]);
-
-                //$request->set()
+                $request = request()->merge([
+                    's_cup_site_page_id' => "".$page['id'],
+                    's_attivo' => "1",
+                    'order_field' => 'data',
+                    'order_direction' => 'DESC'
+                ]);
                 $newsForm = Foorm::getFoorm('cup_site_news.weblist',$request);
-//                $newsForm->input['search_filters'] = [
-//                    [
-//                        'field' => 'cup_site_page_id',
-//                        'value' => $page['id'],
-//                    ]
-//                ];
-                //$newsForm = Foorm::getFoorm('cup_site_news.weblist',request(),['cup_site_page_id' => $page['id']]);
-                $data = $newsForm->getFormData()['data'];
+                $data = $newsForm->getFormData();
+                $news = $data['data'];
+                unset($data['data']);
+                $pagination = $data;
                 return view('cup_site.' . self::$layout .'.pages.' . $pageType,[
                     'page'=> $page,
-                    'news'=> $data,
+                    'news'=> $news,
+                    'pagination' => $pagination,
                     'layout' => self::$layout,
                     'mainPage' => null,
                     'setting' => $this->setting,
                     'menu' => $this->menu,
                     'route_prefix' => config('cup-site.route_prefix'),
                 ]);
-
-//                $newsForm = Foorm::getFoorm('cup_site_news.weblist',request());
-//                return view('cup_site.' . self::$layout .'.pages.news',[
-//                    'page'=> $page,
-//                    'news'=> $newsForm->getFormData()['data'],
-//                    'layout' => self::$layout,
-//                    'setting' => $this->setting,
-//                    'menu' => $this->menu,
-//                    'route_prefix' => config('cup-site.route_prefix'),
-//                ]);
             case 'home':
                 return $this->_home($page);
             case 'blade':
@@ -280,6 +262,26 @@ class CupSiteController extends Controller
             'route_prefix' => config('cup-site.route_prefix'),
         ]);
     }
+    protected function anteprimaNews($menu) {
+        $news = \request()->input();//CupSiteNews::where('menu_it',$menu)->first();
+        if (!Arr::exists($news,'fotos'))
+            $news['fotos'] = [];
+        if (!Arr::exists($news,'videos'))
+            $news['videos'] = [];
+        $pageForm = Foorm::getFoorm('cup_site_page.web',request(),['id' => $news['cup_site_page_id']]);
+        $page = $pageForm->getFormData();
+        $page['children'] = [];
+        return view('cup_site.' . self::$layout .'.pages.news_dettaglio',[
+            'page'=> $page,
+            'news'=> $news,
+            'mainPage' => null,
+            'layout' => self::$layout,
+            'setting' => $this->setting,
+            'menu' => $this->menu,
+            'route_prefix' => config('cup-site.route_prefix'),
+        ]);
+    }
+
     public static function block($type='news') {
         switch ($type) {
             case 'news':
