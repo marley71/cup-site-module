@@ -74,6 +74,9 @@ class CupSiteNews extends Breeze
 
     public function getThumbUrlAttribute()
     {
+        if (!$this->descrizione_it)
+            return config('cup-site.default_thumb_url');
+
         $dom = new Dom();
         $dom->loadStr($this->descrizione_it);
         foreach ($dom->find('img') as $image) {
@@ -82,6 +85,6 @@ class CupSiteNews extends Breeze
                 return $src;
             }
         }
-        return config('cup-site.default_thumb_url');// '/abruzzo/assets/images/logo-abruzzo.png';
+        return config('cup-site.default_thumb_url');
     }
 }
