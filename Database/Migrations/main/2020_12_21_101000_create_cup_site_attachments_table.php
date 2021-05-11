@@ -28,7 +28,7 @@ class CreateCupSiteAttachmentsTable extends Migration {
             $table->integer('mediable_id')->unsigned()->nullable();
             $table->timestamps();
             $table->nullableOwnerships();
-            $table->unique(['mediable_type','mediable_id']);
+            $table->unique(['mediable_type','mediable_id','ordine']);
 		});
 	}
 
