@@ -32,10 +32,10 @@ class CupSiteNewsPolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param  \App\Models\CupSiteUser  $user
+     * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function create(CupSiteUser $user)
+    public function create(User $user)
     {
         //
         if ($user && $user->can('create cup_site_news')) {
@@ -52,7 +52,7 @@ class CupSiteNewsPolicy
      * @param  \App\Models\CupSiteNews  $model
      * @return mixed
      */
-    public function update(User $user, CupSiteNews $model)
+    public function update(User $user)
     {
         //
         if ($user && $user->can('edit cup_site_news')) {
