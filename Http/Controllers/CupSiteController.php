@@ -268,6 +268,16 @@ class CupSiteController extends Controller
             $news['fotos'] = [];
         if (!Arr::exists($news,'videos'))
             $news['videos'] = [];
+        $news['attachments'] = [];
+        if (Arr::exists($news,'attachments-id')) {
+            for($i=0;$i< count(Arr::get($news,'attachments-id',[]));$i++) {
+                $news['attachments'][] = [
+                    'id' => $news['attachments-id'][$i],
+                    'nome_it' => $news['attachments-nome_it'][$i],
+                    'resource' => json_decode($news['attachments-resource'][$i],true)
+                ];
+            }
+        }
         $pageForm = Foorm::getFoorm('cup_site_page.web',request(),['id' => $news['cup_site_page_id']]);
         $page = $pageForm->getFormData();
         $page['children'] = [];
