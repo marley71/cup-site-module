@@ -24,9 +24,9 @@ class CupSiteNews extends Breeze
     //public $timestamps = false;
     //public $ownerships = false;
 
-    public $appends = [
-        'thumb_url'
-    ];
+//    public $appends = [
+//        'thumb_url'
+//    ];
 
 
     public static $relationsData = [
@@ -72,19 +72,19 @@ class CupSiteNews extends Breeze
         return parent::save($options);
     }
 
-    public function getThumbUrlAttribute()
-    {
-        if (!$this->descrizione_it)
-            return config('cup-site.default_thumb_url');
-
-        $dom = new Dom();
-        $dom->loadStr($this->descrizione_it);
-        foreach ($dom->find('img') as $image) {
-            $src = $image->getAttribute('src');
-            if (strpos($src,"data:") === FALSE) {
-                return $src;
-            }
-        }
-        return config('cup-site.default_thumb_url');
-    }
+//    public function getThumbUrlAttribute()
+//    {
+//        if (!$this->descrizione_it)
+//            return config('cup-site.default_thumb_url');
+//
+//        $dom = new Dom();
+//        $dom->loadStr($this->descrizione_it);
+//        foreach ($dom->find('img') as $image) {
+//            $src = $image->getAttribute('src');
+//            if (strpos($src,"data:") === FALSE) {
+//                return $src;
+//            }
+//        }
+//        return config('cup-site.default_thumb_url');
+//    }
 }

@@ -17,6 +17,7 @@ trait HtmlTraits {
             return $content;
         $dom = new Dom();
         $dom->loadStr($content);
+        $imageCount = 0;
         foreach ($dom->find('img') as $image) {
             $src = $image->getAttribute('src');
             if (strpos($src,"data:") !== FALSE) {
@@ -25,11 +26,16 @@ trait HtmlTraits {
                 $mimeType = substr($src,5,strpos($src,"base64,")-6); // elimino data: fino a prima di ;base64
                 $ext = $this->_mimeToExt($mimeType);
                 $filename = "image" . rand() . ".$ext";
-                file_put_contents(public_path('/cup_site/media/images/'.$filename),$imgData);
-                $image->setAttribute('src','/cup_site/media/images/'.$filename);
+                $image_path = config('cup-site.media_image_path','/cup_site/media/imagesdddd/');
+                file_put_contents(public_path( $image_path . $filename),$imgData);
+                $image->setAttribute('src',$image_path .$filename);
             }
-
+            if ($imageCount == 0)
+                $this->thumb_url =  $image->getAttribute('src');
+            $imageCount++;
         }
+        if (!$this->thumb_url)
+            $this->thumb_url = config('cup-site.default_thumb_url');
         $content = $dom->outerHtml;
         return $content;
     }
