@@ -28,6 +28,6 @@ class CupSiteAttachment extends Breeze
 
     public function getUrl()
     {
-        return '/viewmediable/cup_site_attachment/'.$this->getKey();
+        return '/downloadmediable/cup_site_attachment/'.$this->getKey();
     }
 }
