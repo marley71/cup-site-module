@@ -278,6 +278,7 @@ class CupSiteController extends Controller
                 ];
             }
         }
+        $news['info'] = json_decode($news['info'],true);
         $pageForm = Foorm::getFoorm('cup_site_page.web',request(),['id' => $news['cup_site_page_id']]);
         $page = $pageForm->getFormData();
         $page['children'] = [];
