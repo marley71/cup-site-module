@@ -278,7 +278,16 @@ class CupSiteController extends Controller
                 ];
             }
         }
-        $news['info'] = json_decode($news['info'],true);
+        //$news['info'] = json_decode($news['info'],true);
+        $news['info'] = [
+            'showmap' => Arr::get($news,'showmap',false),
+            'lat' => Arr::get($news,'lat'),
+            'lng' => Arr::get($news,'lng'),
+            'thumb_url_type' => Arr::get($news,'thumb_url_type','auto'),
+            'background_url_type' => Arr::get($news,'background_url_type','auto'),
+        ];
+
+
         $pageForm = Foorm::getFoorm('cup_site_page.web',request(),['id' => $news['cup_site_page_id']]);
         $page = $pageForm->getFormData();
         $page['children'] = [];

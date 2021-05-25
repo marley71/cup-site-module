@@ -26,7 +26,7 @@ trait HtmlTraits {
                 $mimeType = substr($src,5,strpos($src,"base64,")-6); // elimino data: fino a prima di ;base64
                 $ext = $this->_mimeToExt($mimeType);
                 $filename = "image" . rand() . ".$ext";
-                $image_path = config('cup-site.media_image_path','/cup_site/media/imagesdddd/');
+                $image_path = config('cup-site.media_image_path','/cup_site/media/images/');
                 file_put_contents(public_path( $image_path . $filename),$imgData);
                 $image->setAttribute('src',$image_path .$filename);
             }
