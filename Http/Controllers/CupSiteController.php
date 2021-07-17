@@ -18,8 +18,8 @@ use Modules\CupSite\Models\CupSiteSetting;
 class CupSiteController extends Controller
 {
     protected static $layout = null;
-    private $setting = null;
-    private $menu = null;
+    protected $setting = null;
+    protected $menu = null;
     /**
      * Create a new controller instance.
      *
@@ -53,7 +53,10 @@ class CupSiteController extends Controller
 
         switch ($mainPage->type) {
             case 'news':
-                return $this->dettaglioNews($mainPage,$submenu);
+                $item = CupSiteNews::where('menu_it',$submenu)->first();
+                if (!$item)
+                    abort(404);
+                return $this->dettaglioNews($item);
             default:
                 if ($submenu) {
                     $page = CupSitePage::where('menu_it',$submenu)->where('cup_site_page_id',$mainPage->getKey())->first();
@@ -242,10 +245,7 @@ class CupSiteController extends Controller
         return CupSitePage::getPageTree();
     }
 
-    protected function dettaglioNews($mainPage,$menu) {
-        $item = CupSiteNews::where('menu_it',$menu)->first();
-        if (!$item)
-            abort(404);
+    protected function dettaglioNews($item) {
 
         $newsForm = Foorm::getFoorm('cup_site_news.web',request(),['id' => $item['id']]);
         $pageForm = Foorm::getFoorm('cup_site_page.web',request(),['id' => $item['cup_site_page_id']]);
