@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\CupSite\App\Policies\CupSiteNewsPolicy;
+namespace App\Policies;
 
 use App\Models\User;
 use App\Models\CupSitePage;
