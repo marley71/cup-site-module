@@ -92,7 +92,7 @@ class CupSiteController extends Controller
         if (!$menu)
             $page = CupSitePage::first(); // bisogna prendere l'home
         else
-            $page = CupSitePage::where('menu_it',$menu)->first();
+            $page = CupSitePage::where('menu_it',urlencode($menu))->first();
         if (!$page)
             abort(404,'Pagina non trovata');
 
@@ -262,7 +262,7 @@ class CupSiteController extends Controller
             'route_prefix' => config('cup-site.route_prefix'),
         ]);
     }
-    protected function anteprimaNews($menu) {
+    protected function anteprimaNews() {
         $news = \request()->input();//CupSiteNews::where('menu_it',$menu)->first();
         if (!Arr::exists($news,'fotos'))
             $news['fotos'] = [];
@@ -294,6 +294,46 @@ class CupSiteController extends Controller
         return view('cup_site.' . self::$layout .'.pages.news_dettaglio',[
             'page'=> $page,
             'news'=> $news,
+            'mainPage' => null,
+            'layout' => self::$layout,
+            'setting' => $this->setting,
+            'menu' => $this->menu,
+            'route_prefix' => config('cup-site.route_prefix'),
+        ]);
+    }
+
+    protected function anteprimaPage() {
+        $page = \request()->input();//CupSiteNews::where('menu_it',$menu)->first();
+        if (!Arr::exists($page,'fotos'))
+            $page['fotos'] = [];
+        if (!Arr::exists($page,'videos'))
+            $page['videos'] = [];
+        $page['attachments'] = [];
+        if (Arr::exists($page,'attachments-id')) {
+            for($i=0;$i< count(Arr::get($page,'attachments-id',[]));$i++) {
+                $page['attachments'][] = [
+                    'id' => $page['attachments-id'][$i],
+                    'nome_it' => $page['attachments-nome_it'][$i],
+                    'resource' => json_decode($page['attachments-resource'][$i],true)
+                ];
+            }
+        }
+        //$page['info'] = json_decode($page['info'],true);
+        $page['info'] = [
+            'showmap' => Arr::get($page,'showmap',false),
+            'lat' => Arr::get($page,'lat'),
+            'lng' => Arr::get($page,'lng'),
+            'thumb_url_type' => Arr::get($page,'thumb_url_type','auto'),
+            'background_url_type' => Arr::get($page,'background_url_type','auto'),
+        ];
+
+
+        $pageForm = Foorm::getFoorm('cup_site_page.web',request(),['id' => $page['cup_site_page_id']]);
+        $pageParent = $pageForm->getFormData();
+        $pageParent['children'] = [];
+        return view('cup_site.' . self::$layout .'.pages.html',[
+            'page'=> $pageParent,
+            'page'=> $page,
             'mainPage' => null,
             'layout' => self::$layout,
             'setting' => $this->setting,
