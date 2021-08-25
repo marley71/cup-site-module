@@ -35,7 +35,6 @@ class CupSiteController extends Controller
         }
         self::$layout = $setting->layout; // config('cup-site.layout');
         $this->setting = $setting?$setting->toArray():[];
-        $this->menu = $this->_menu();
     }
     /**
      * Display a listing of the resource.
@@ -48,6 +47,7 @@ class CupSiteController extends Controller
 
     public function subPage($menu,$submenu) {
         $mainPage = CupSitePage::where('menu_it',$menu)->first();
+        $this->menu = $this->_menu();
         if (!$mainPage)
             abort('404','main page not found');
 
@@ -91,6 +91,7 @@ class CupSiteController extends Controller
      */
     public function page($menu=null)
     {
+        $this->menu = $this->_menu();
         $page = null;
         if (!$menu)
             $page = CupSitePage::first(); // bisogna prendere l'home
@@ -155,6 +156,7 @@ class CupSiteController extends Controller
     }
 
     public function news($menu) {
+        $this->menu = $this->_menu();
         $item = CupSiteNews::where('menu_it',$menu)->first();
         if (!$item)
             abort(404);
@@ -182,6 +184,7 @@ class CupSiteController extends Controller
     }
 
     public function eventi($menu) {
+        $this->menu = $this->_menu();
         $item = CupSiteNews::where('menu_it',$menu)->first();
         if (!$item)
             abort(404);
@@ -246,7 +249,7 @@ class CupSiteController extends Controller
     }
 
     protected function dettaglioNews($item) {
-
+        $this->menu = $this->_menu();
         $newsForm = Foorm::getFoorm('cup_site_news.web',request(),['id' => $item['id']]);
         $pageForm = Foorm::getFoorm('cup_site_page.web',request(),['id' => $item['cup_site_page_id']]);
         $page = $pageForm->getFormData();
@@ -263,6 +266,7 @@ class CupSiteController extends Controller
         ]);
     }
     protected function anteprimaNews() {
+        $this->menu = $this->_menu();
         $news = \request()->input();//CupSiteNews::where('menu_it',$menu)->first();
         if (!Arr::exists($news,'fotos'))
             $news['fotos'] = [];
@@ -303,6 +307,7 @@ class CupSiteController extends Controller
     }
 
     protected function anteprimaPage() {
+        $this->menu = $this->_menu();
         $page = \request()->input();//CupSiteNews::where('menu_it',$menu)->first();
         if (!Arr::exists($page,'fotos'))
             $page['fotos'] = [];
