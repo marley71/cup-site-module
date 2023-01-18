@@ -5,7 +5,7 @@ use Gecche\Breeze\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 
-class CreateCupSiteSettingsTable extends Migration
+return new class extends Migration
 {
 
     /**
@@ -43,4 +43,4 @@ class CreateCupSiteSettingsTable extends Migration
         Schema::drop('cup_site_settings');
     }
 
-}
+};

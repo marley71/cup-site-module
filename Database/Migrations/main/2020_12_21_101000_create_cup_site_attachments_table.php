@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Gecche\Breeze\Database\Schema\Blueprint;
 
-class CreateCupSiteAttachmentsTable extends Migration {
+return new class  extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -43,4 +43,4 @@ class CreateCupSiteAttachmentsTable extends Migration {
 		Schema::drop('cup_site_attachments');
 	}
 
-}
+};
